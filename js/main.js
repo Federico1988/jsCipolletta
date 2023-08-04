@@ -1,10 +1,14 @@
+
+
+alert("Bienvenido! Esto es un simulador que cuenta apariciones de letras.\nPara comenzar, por favor ingrese sus datos.")
+
 document.getElementById('customForm').addEventListener('submit', function (event) {
     event.preventDefault();
     var form = event.target;
     if (form.checkValidity()) {
 
-        let inputMail = document.getElementById('inputMail');
-        let inputName = document.getElementById('inputName');
+        const inputMail = document.getElementById('inputMail');
+        const inputName = document.getElementById('inputName');
 
         let inputCorrect = false;
         let letra;
@@ -32,17 +36,26 @@ document.getElementById('customForm').addEventListener('submit', function (event
 
         } while (!inputCorrect && tries-- !== 0);
 
-        console.log("Tries ")
+        console.log("Tries: " + tries);
 
+        console.log("Texto a analizar: " + inputName.value + inputMail.value)
         if (tries === 0)
             alert("Se superó la cantidad de intentos...");
         else
-            alert("La letra " + letra + ", aparece " + " veces en el mail y el nombre.")
-
-
-
-        alert("Palabra ingresada: " + palabra);
+            alert("La letra " + letra + ", aparece " + contarLetra(letra, inputName.value + inputMail.value) + " veces en el mail y el nombre.")
     }
 });
 
+function contarLetra(letra, palabra) {
+    console.log("Palabra ingresada: " + palabra);
+    let apariciones = 0;
+    letra = letra.toLowerCase();
+    palabra = palabra.toLowerCase();
 
+    for (let i = 0; i < palabra.length; i++) {
+        if (palabra[i] == letra)
+            apariciones++;
+    }
+    return apariciones;
+
+}
