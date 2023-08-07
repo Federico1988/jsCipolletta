@@ -34,7 +34,7 @@ document.getElementById('customForm').addEventListener('submit', function (event
 
             inputCorrect = true;
 
-        } while (!inputCorrect && tries-- !== 0);
+        } while (!inputCorrect && --tries !== 0);
 
         console.log("Tries: " + tries);
 
