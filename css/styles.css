@@ -33,4 +33,18 @@ form textarea {
   margin: 20px;
 }
 
+.buttonsDiv {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.buttonClass {
+  display: none;
+  padding: 15px;
+  font-size: larger;
+  font-weight: 500;
+  margin: 30px;
+}
+
 /*# sourceMappingURL=styles.css.map */
