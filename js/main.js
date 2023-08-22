@@ -1,5 +1,6 @@
 let inputWordButton = document.getElementById("customPromptBtn");
 let startCountButton = document.getElementById("startCounBtn");
+let orderWordsButton = document.getElementById("orderWords");
 let customForm = document.getElementById('customForm');
 
 alert("Bienvenido! Esto es un juego de memoria, que cuenta apariciones de letras.\nPara comenzar, por favor ingrese sus datos.")
@@ -12,7 +13,8 @@ class InputWord {
         this.letra = letra.toUpperCase();
         this.cantidad = 1;
         this.asignarPuntaje();
-        this.puntajeObtenido = 0;
+        this.puntajeObtenido_letras = 0;
+        this.puntajeObtenido_palabras = 0;
     }
 
     contarLetra() {
@@ -40,7 +42,7 @@ class InputWord {
         let resta = Math.abs(this.contarLetra() - usrApariciones);
         if (!vocales.includes(this.letra))
             resta *= 2;
-        this.puntajeObtenido = this.puntaje - resta; // mas resta cuanto mas se aleja de la cantidad correcta
+        this.puntajeObtenido_letras = this.puntaje - resta; // mas resta cuanto mas se aleja de la cantidad correcta
     }
 
 }
@@ -65,111 +67,128 @@ customForm.addEventListener('submit', function (event) {
     var form = event.target;
     if (form.checkValidity()) {
         inputWordButton.style.display = 'block';
-        /*   const inputMail = document.getElementById('inputMail');
-           const inputName = document.getElementById('inputName');
-   
-           let inputCorrect = false;
-           let letra;
-           let mensaje = "Gracias por la informacion.\nIngrese una palabra para sumar a la lista";
-           let tries = 5;
-   
-           do {
-   
-               letra = prompt(mensaje);
-               if (letra.length != 1) {
-                   alert("Ingresar una letra únicamente");
-                   inputCorrect = false;
-                   mensaje = "Ingrese una letra: ";
-                   continue;
-               }
-   
-               if (letra.toLowerCase() === letra.toUpperCase()) {
-                   alert("No se ingresó una letra.\nSolo se admiten letras.");
-                   inputCorrect = false;
-                   mensaje = "Ingrese una letra: ";
-                   continue;
-               }
-   
-               inputCorrect = true;
-   
-           } while (!inputCorrect && --tries !== 0);
-   
-           console.log("Tries: " + tries);
-   
-           console.log("Texto a analizar: " + inputName.value + inputMail.value)
-           if (tries === 0)
-               alert("Se superó la cantidad de intentos...");
-           else
-               alert("La letra " + letra + ", aparece " + contarLetra(letra, inputName.value + inputMail.value) + " veces en el mail y el nombre.")*/
+
     }
 });
 
-/* function contarLetra(letra, palabra) {
-    console.log("Palabra ingresada: " + palabra);
-    let apariciones = 0;
-    letra = letra.toLowerCase();
-    palabra = palabra.toLowerCase();
-
-    for (let i = 0; i < palabra.length; i++) {
-        if (palabra[i] == letra)
-            apariciones++;
-    }
-    return apariciones;
-
-} */
-
 //Manejo del prompt
 inputWordButton.addEventListener("click", async () => {
-    const { value: formValues } = await Swal.fire({
-        title: 'Ingrese una palabra, y la letra a contar',
-        html:
-            '<input id="palabra" class="swal2-input" placeholder="Palabra">' +
-            '<input id="letra" class="swal2-input" placeholder="Letra a contar">',
-        focusConfirm: false,
-        preConfirm: () => {
-            return [
-                document.getElementById('palabra').value,
-                document.getElementById('letra').value
-            ];
-        }
-    });
+    let inputCorrect = false;
+    let tries = 3;
+    do {
 
-    if (formValues) {
-        console.log("Palabra:", formValues[0]);
-        console.log("Letra:", formValues[1]);
-        //TODO: Verificaciones de input
-        wordsList.push(new InputWord(formValues[0], formValues[1]));
+        const { value: promptValues } = await Swal.fire({
+            title: 'Ingrese una palabra, y la letra a contar',
+            html:
+                '<input id="palabra" class="swal2-input" placeholder="Palabra">' +
+                '<input id="letra" class="swal2-input" placeholder="Letra a contar">',
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById('palabra').value,
+                    document.getElementById('letra').value
+                ];
+            }
+        });
+
+        if (promptValues[0].length == 0 || promptValues[1].length == 0) {
+            alert("Por favor complete los 2 campos");
+            inputCorrect = false;
+            continue;
+        }
+
+        console.log("Palabra: ", promptValues[0]);
+        console.log("Letra: ", promptValues[1]);
+
+        if (promptValues[1].length != 1) {
+            alert(`Se ingresó mas de un carater en el campo "Letra". Ingresar una letra únicamente`);
+            inputCorrect = false;
+            continue;
+        }
+
+        if (promptValues[1].toLowerCase() === promptValues[1].toUpperCase()) {
+            alert(`Se ingresó "${promptValues[1]}" en el campo "Letra".\nSolo se admiten letras.`);
+            inputCorrect = false;
+            continue;
+        }
+        if (hasNumbers(promptValues[0])) {
+            alert(`Se ingresó "${promptValues[0]}" en el campo "Palabra".\nSolo se admiten letras (sin numeros).`);
+            inputCorrect = false;
+            continue;
+        }
+        if (promptValues[0].length < 3) {
+            alert(`Se ingresó " ${promptValues[1]}" en el campo "Palabra".\nPor favor ingrese una palabra de 3 letras o mas`);
+            inputCorrect = false;
+            continue;
+        }
+
+        inputCorrect = true;
+
+
+
+        wordsList.push(new InputWord(promptValues[0], promptValues[1]));
         if (wordsList.length >= 5)
             startCountButton.style.display = 'block';
         console.log("--> Lista de palabras: ");
         console.log(wordsList);
-    }
+
+
+    } while (!inputCorrect && --tries !== 0);
 });
 
 startCountButton.addEventListener("click", async () => {
 
     for (const [index, element] of wordsList.entries()) {
         console.log("Analizando elemento: " + element.word);
-        let userAnswer = prompt("Cuantas veces aparecía la letra solicitada en la " + (index + 1) + "° palabra ingresada?\nIngrese FIN para salir");
+        let userAnswer = prompt("Cuantas veces aparecía la letra solicitada en la " + (index + 1) + "° palabra ingresada?\nAprete Cancelar salir");
 
-        if (userAnswer != "FIN")
-            console.log("El usuario ingresó: " + userAnswer + " , y la restpuesta correcta es: " + element.contarLetra());
-        if (userAnswer == "FIN")
-            return;
+        if (userAnswer === null || userAnswer == "FIN")
+            break;
+
+        console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + element.contarLetra());
+
         let numAnswer = parseInt(userAnswer);
         element.computarPuntaje(numAnswer);
-        console.log("Consiguio: " + element.puntajeObtenido + " de " + element.puntaje)
+        console.log("Consiguio: " + element.puntajeObtenido_letras + " de " + element.puntaje)
     }
+
     console.log("--->Resultados:")
     console.log(wordsList);
 
     let puntaje = 0;
     let puntajeMaximo = 0;
     wordsList.forEach(el => {
-        puntaje += el.puntajeObtenido;
+        puntaje += el.puntajeObtenido_letras;
         puntajeMaximo += el.puntaje;
     })
-    alert("Puntaje obtenido: " + puntaje + " de un maximo de: " + puntajeMaximo + "\nRendimiento: " + ((puntaje / puntajeMaximo) * 100).toFixed(0) + "%");
+
+    alert("Puntaje obtenido: " + puntaje + " de un máximo de: " + puntajeMaximo + "\nRendimiento: " + ((puntaje / puntajeMaximo) * 100).toFixed(0) + "%");
 });
 
+orderWordsButton.addEventListener("click", async () => {
+    for (const [index, element] of wordsList.entries()) {
+        console.log("Analizando elemento: " + element.word);
+        let userAnswer = prompt("Ingrese la" + (index + 1) + "° palabra ingresada previamente\nAprete Cancelar salir");
 
+        if (userAnswer === null || userAnswer == "FIN")
+            break;
+
+        wordsList.find()
+
+        //Si no estaba resta su puntaje
+        //Si esta a menos de 1 orden de distancia suma la mitad (+1 o -1)
+        //si esta a mas de un orde de distancia no suma nada
+        //Si esta en la posicion correcta suma su puntaje
+        console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + element.word);
+        if (userAnswer.toUpperCase() === element.word.toUpperCase()) {
+            element.puntajeObtenido_palabras += ele
+        }
+
+
+    }
+})
+
+
+function hasNumbers(inputString) {
+    return /\d/.test(inputString);
+}
