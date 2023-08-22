@@ -1,7 +1,8 @@
-let inputWordButton = document.getElementById("customPromptBtn");
-let startCountButton = document.getElementById("startCounBtn");
-let orderWordsButton = document.getElementById("orderWords");
-let customForm = document.getElementById('customForm');
+let inputWordButton = document.getElementById("customPromptBtn"),
+    startCountButton = document.getElementById("startCounBtn"),
+    orderWordsButton = document.getElementById("orderWords"),
+    customForm = document.getElementById('customForm'),
+    reglas = document.getElementById('reglasDiv');
 
 alert("Bienvenido! Esto es un juego de memoria, que cuenta apariciones de letras.\nPara comenzar, por favor ingrese sus datos.")
 let vocales = ["a", "e", "i", "o", "u"];
@@ -45,6 +46,11 @@ class InputWord {
         this.puntajeObtenido_letras = this.puntaje - resta; // mas resta cuanto mas se aleja de la cantidad correcta
     }
 
+    borrarPuntaje() {
+        this.puntajeObtenido_letras = 0;
+        this.puntajeObtenido_palabras = 0;
+    }
+
 }
 
 let wordsList = [];
@@ -67,7 +73,7 @@ customForm.addEventListener('submit', function (event) {
     var form = event.target;
     if (form.checkValidity()) {
         inputWordButton.style.display = 'block';
-
+        reglas.style.display = 'block';
     }
 });
 
@@ -127,8 +133,10 @@ inputWordButton.addEventListener("click", async () => {
 
 
         wordsList.push(new InputWord(promptValues[0], promptValues[1]));
-        if (wordsList.length >= 5)
+        if (wordsList.length >= 5) {
             startCountButton.style.display = 'block';
+            orderWordsButton.style.display = 'block'
+        }
         console.log("--> Lista de palabras: ");
         console.log(wordsList);
 
@@ -137,7 +145,7 @@ inputWordButton.addEventListener("click", async () => {
 });
 
 startCountButton.addEventListener("click", async () => {
-
+    borrarPuntaje();
     for (const [index, element] of wordsList.entries()) {
         console.log("Analizando elemento: " + element.word);
         let userAnswer = prompt("Cuantas veces aparecía la letra solicitada en la " + (index + 1) + "° palabra ingresada?\nAprete Cancelar salir");
@@ -155,40 +163,76 @@ startCountButton.addEventListener("click", async () => {
     console.log("--->Resultados:")
     console.log(wordsList);
 
-    let puntaje = 0;
-    let puntajeMaximo = 0;
-    wordsList.forEach(el => {
-        puntaje += el.puntajeObtenido_letras;
-        puntajeMaximo += el.puntaje;
-    })
-
-    alert("Puntaje obtenido: " + puntaje + " de un máximo de: " + puntajeMaximo + "\nRendimiento: " + ((puntaje / puntajeMaximo) * 100).toFixed(0) + "%");
+    //Sumo el puntaje total y lo muestro
+    calcularYmostrarResultado('Cuenta de Letras', "puntajeObtenido_letras");
 });
 
 orderWordsButton.addEventListener("click", async () => {
+    borrarPuntaje();
     for (const [index, element] of wordsList.entries()) {
         console.log("Analizando elemento: " + element.word);
-        let userAnswer = prompt("Ingrese la" + (index + 1) + "° palabra ingresada previamente\nAprete Cancelar salir");
+        let userAnswer = prompt("Ingrese la " + (index + 1) + "° palabra ingresada previamente\nAprete Cancelar para salir");
 
         if (userAnswer === null || userAnswer == "FIN")
             break;
 
-        wordsList.find()
 
-        //Si no estaba resta su puntaje
-        //Si esta a menos de 1 orden de distancia suma la mitad (+1 o -1)
-        //si esta a mas de un orde de distancia no suma nada
-        //Si esta en la posicion correcta suma su puntaje
-        console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + element.word);
-        if (userAnswer.toUpperCase() === element.word.toUpperCase()) {
-            element.puntajeObtenido_palabras += ele
+        const foundElement = wordsList.find(el => el.word.toUpperCase() === userAnswer.toUpperCase());
+
+        if (foundElement) {
+            console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta en la posicion " + index + " es: " + element.word);
+            let indexOfFoundElement = wordsList.indexOf(foundElement);
+            console.log("La palabra igresada se encuentra en la posicion: " + indexOfFoundElement);
+            const distancia = indexOfFoundElement - index;
+            switch (distancia) {
+                case 0:        //Si esta en la posicion correcta suma su puntaje
+                    element.puntajeObtenido_palabras += element.puntaje;
+                    break;
+                case 1:            //Si esta a 1 orden de distancia suma la mitad (+1 o -1)
+                case -1:
+                    element.puntajeObtenido_palabras += element.puntaje / 2;
+                    break
+                default:        //si esta a mas de un orde de distancia no suma nada
+
+                    break;
+            }
+
+            console.log("Suma en este palabra: " + element.puntajeObtenido_palabras);
+
+        } else {
+            console.log("No se encuentra el elemento, resta el puntaje de la palabra correcta");
+            element.puntajeObtenido_palabras -= element.puntaje;
+            continue; // sigo con la proxima palabra
         }
-
-
     }
+
+    console.log("--->Resultados:")
+    console.log(wordsList);
+
+    //Sumo el puntaje total y lo muestro
+    calcularYmostrarResultado('Orden de Palabras', "puntajeObtenido_palabras");
 })
 
 
 function hasNumbers(inputString) {
     return /\d/.test(inputString);
+}
+
+function calcularYmostrarResultado(nombreJuego, campo) {
+    //TODO: Deberia chequear que campo pertenece a la clase InputWord
+    let puntaje = 0;
+    let puntajeMaximo = 0;
+
+    wordsList.forEach(el => {
+        puntaje += el[campo];
+        puntajeMaximo += el.puntaje;
+    });
+
+    const rendimiento = ((puntaje / puntajeMaximo) * 100).toFixed(0);
+
+    alert("Puntaje obtenido en " + nombreJuego + ": " + puntaje + " de un máximo de " + puntajeMaximo + "\nRendimiento: " + rendimiento + "%");
+}
+
+function borrarPuntaje() {
+    wordsList.forEach(el => el.borrarPuntaje());
 }

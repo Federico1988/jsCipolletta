@@ -47,4 +47,13 @@ form textarea {
   margin: 30px;
 }
 
+#reglasDiv {
+  display: none;
+  padding: 50px;
+}
+#reglasDiv p {
+  font-size: large;
+  font-weight: 500;
+}
+
 /*# sourceMappingURL=styles.css.map */
