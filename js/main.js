@@ -55,12 +55,12 @@ class InputWord {
 
 let wordsList = [];
 
-//Lleno la lista para la parte de testing (asi no tengo que ingresar todas a mano), en realidad el usuario ingresa todas
-wordsList.push(new InputWord("Hola", "L"));
+//Lleno la lista para la parte de testing (asi no tengo que ingresar todas a mano), en realidad el usuario ingresa todas. Las dejo comentadas para prox test
+/*wordsList.push(new InputWord("Hola", "L"));
 wordsList.push(new InputWord("Chau", "L"));
 wordsList.push(new InputWord("Mesa", "M"));
 wordsList.push(new InputWord("Milanesa", "N"));
-wordsList.push(new InputWord("Acondicionado", "N"));
+wordsList.push(new InputWord("Acondicionado", "N"));*/
 
 customForm.addEventListener('reset', function (event) {
 
