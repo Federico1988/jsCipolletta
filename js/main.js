@@ -7,21 +7,8 @@ let inputWordButton = document.getElementById("customPromptBtn"),
 alert("Bienvenido! Esto es un juego de memoria, que cuenta apariciones de letras.\nPara comenzar, por favor ingrese sus datos.")
 let vocales = ["a", "e", "i", "o", "u"];
 
-
-
-//ejemplos funciones de orden superior, que devuelven funciones
-const suma = asignarOperador("sumar");
-console.log(suma(2, 3));
-//ejemplos funciones de orden superior, que reciben funciones
-const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-//porCadaUno(numeros, alert);
-//porCadaUno(numeros, console.log);
-//porCadaUno(numeros, (el) => { console.log(el * 2) });
-
-console.log("Imprimo los pares de " + numeros);
-const pares = miFiltrado(numeros, (el) => { return el % 2 == 0 });
-console.log(pares);
-
+console.log("Imprimo la lista que esta guardada");
+console.log(JSON.parse(localStorage.getItem("wordList")));
 class InputWord {
     constructor(word, letra) {
         this.word = word.toUpperCase();
@@ -145,9 +132,10 @@ inputWordButton.addEventListener("click", async () => {
         inputCorrect = true;
 
 
-
-        wordsList.push(new InputWord(promptValues[0], promptValues[1]));
-        if (wordsList.length >= 5) {
+        let newInputWord = new InputWord(promptValues[0], promptValues[1]);
+        wordsList.push(newInputWord);
+        localStorage.setItem("wordList",JSON.stringify(wordsList));
+            if(wordsList.length >= 5) {
             startCountButton.style.display = 'block';
             orderWordsButton.style.display = 'block'
         }
