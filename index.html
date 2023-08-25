@@ -19,6 +19,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;1,500&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;1,600&display=swap"
         rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -39,8 +41,8 @@
                     <div class="col-md-6    ">
                         <label class="formLabel" for="email">Ingresá tu email:</label>
                         <div class="input-group">
-                            <input id="inputMail" type="email" placeholder="email@domain.com" required name="email" id="email"
-                                class="form-control">
+                            <input id="inputMail" type="email" placeholder="email@domain.com" required name="email"
+                                id="email" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -53,6 +55,28 @@
                     </div>
                 </div>
             </form>
+            <div class="buttonsDiv">
+                <button class="buttonClass" id="customPromptBtn">Ingresar nueva palabra!</button>
+                <button class="buttonClass" id="startCounBtn">Comenzar Cuenta de Letras</button>
+                <button class="buttonClass" id="orderWords">Comenzar Orden de Palabras</button>
+            </div>
+            <div id="reglasDiv">
+                <h2>Reglas de juegos: </h2>
+
+                <p>
+                    En primer lugar, ingrese palabras usando el boton de arriba (minimo 5 palabras). El cuadro pedirá
+                    una palabra y una letra. Recuérdelas. (No vale anotar en papel!). Ud puede agregar palabras en cualquier momento.
+                </p>
+                <p>
+                    Juego Cuenta de Letras:
+                    Ud deberá ingresar cuántas veces aparece la letra en la palabra que ud ingresó anteriormente. El
+                    cuadro solo le indicará el número de orden de la palabra (1er palabra, 2da palabra, etc).
+                </p>
+                <p>
+                    Juego Orden de Palabras:
+                    Ud deberá ingresar las palabras nuevamente, en el orden correcto.
+                </p>
+            </div>
         </div>
 
     </main>
@@ -65,6 +89,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 

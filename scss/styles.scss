@@ -14,7 +14,7 @@ h1 {
     font-style: italic;
 }
 
-.formLabel{
+.formLabel {
     display: inline-block;
     width: 250px;
     padding: 5px;
@@ -33,4 +33,28 @@ form {
     }
 
     margin-top: 30px;
+}
+
+.buttonsDiv {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.buttonClass {
+    display: none;
+    padding: 15px;
+    font-size: larger;
+    font-weight: 500;
+    margin: 30px;
+}
+
+#reglasDiv {
+    display: none;
+    padding: 50px;
+
+    p {
+        font-size: large;
+        font-weight: 500;
+    }
 }
