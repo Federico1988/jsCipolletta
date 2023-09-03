@@ -7,14 +7,13 @@ const inputWordButton = document.getElementById("customPromptBtn"),
     registerButton = document.getElementById('registerButton'),
     mailInput = document.querySelector("#emailInput"),
     passwordInput = document.querySelector("#passwordInput"),
-    nameInput = document.querySelector("#nameInput"),
+    //nameInput = document.querySelector("#nameInput"),
     loginMsgLabel = document.querySelector("#loginMsgLabel");
 
 const vocales = ["a", "e", "i", "o", "u"];
 const USER_NOT_FOUND = 0, WRONG_PASSWORD = 1, LOGIN_OK = 2;
 class User {
-    constructor(userName, password, wordList) {
-        this.userName = userName;
+    constructor(password, wordList) {
         this.password = password;
         this.wordList = wordList;
     }
@@ -75,31 +74,38 @@ currentWordList.push(new InputWord("Milanesa", "N"));
 currentWordList.push(new InputWord("Acondicionado", "N"));*/
 
 registerButton.addEventListener('click', function (event) {
+    loginMsgLabel.textContent = '';
 
-
-
+    if (customForm.checkValidity()) {
+        localStorage.setItem(mailInput.value,JSON.stringify(new User(passwordInput.value,[])));
+        mailInput.vale = "";
+        passwordInput.value = "";
+        loginMsgLabel.textContent = 'Registrado!';
+        loginMsgLabel.className = '';
+        loginMsgLabel.classList.add('greenLabel');
+    }
+    else {
+        loginMsgLabel.textContent = 'Complete ambos campos';
+        loginMsgLabel.className = '';
+        loginMsgLabel.classList.add('redLabel');
+    }
     inputWordButton.style.display = 'none';
     startCountButton.style.display = 'none';
 });
 
-logginButton.addEventListener('click', function (event) {
-
-    if (customForm.checkValidity()) {
-        //inputWordButton.style.display = 'block';
-        //reglas.style.display = 'block';
-        switch (checkPassword(mailInput.value, passwordInput.value)) {
-            case USER_NOT_FOUND:
-                console.log("Usuario No Encontrado");
-                break;
-            case WRONG_PASSWORD:
-                console.log("Contraseña Incorrecta");
-                break;
-            case LOGIN_OK:
-                console.log("Login ok usuario: " + mailInput.value + " -->> Voy a pagina del juego");
-                break;
-        }
+customForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    switch (checkPassword(mailInput.value, passwordInput.value)) {
+        case USER_NOT_FOUND:
+            console.log("Usuario No Encontrado");
+            break;
+        case WRONG_PASSWORD:
+            console.log("Contraseña Incorrecta");
+            break;
+        case LOGIN_OK:
+            console.log("Login ok usuario: " + mailInput.value + " -->> Voy a pagina del juego");
+            break;
     }
-    //moverse de pagina
 });
 
 function checkPassword(input_mail, input_password) {
@@ -109,11 +115,9 @@ function checkPassword(input_mail, input_password) {
     else if (user.password != input_password)
         return WRONG_PASSWORD;
     else {
-        currentWordList = wordList;//Cargo la lista
+        currentWordList = user.wordList;//Cargo la lista
         return LOGIN_OK;
     }
-
-
 }
 
 
