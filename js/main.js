@@ -77,12 +77,21 @@ registerButton.addEventListener('click', function (event) {
     loginMsgLabel.textContent = '';
 
     if (customForm.checkValidity()) {
-        localStorage.setItem(mailInput.value,JSON.stringify(new User(passwordInput.value,[])));
-        mailInput.vale = "";
-        passwordInput.value = "";
-        loginMsgLabel.textContent = 'Registrado!';
-        loginMsgLabel.className = '';
-        loginMsgLabel.classList.add('greenLabel');
+        const user = JSON.parse(localStorage.getItem(mailInput.value));
+        if (user != null) {
+
+            loginMsgLabel.textContent = 'El usuario ya existe!';
+            loginMsgLabel.className = '';
+            loginMsgLabel.classList.add('redLabel');
+        }
+        else {
+            localStorage.setItem(mailInput.value, JSON.stringify(new User(passwordInput.value, [])));
+            mailInput.vale = "";
+            passwordInput.value = "";
+            loginMsgLabel.textContent = 'Registrado!';
+            loginMsgLabel.className = '';
+            loginMsgLabel.classList.add('greenLabel');
+        }
     }
     else {
         loginMsgLabel.textContent = 'Complete ambos campos';
@@ -95,12 +104,18 @@ registerButton.addEventListener('click', function (event) {
 
 customForm.addEventListener('submit', function (event) {
     event.preventDefault();
-    switch (checkPassword(mailInput.value, passwordInput.value)) {
+    switch (checkPasswordAndLoadList(mailInput.value, passwordInput.value)) {
         case USER_NOT_FOUND:
             console.log("Usuario No Encontrado");
+            loginMsgLabel.textContent = 'Usuario no encontrado!';
+            loginMsgLabel.className = '';
+            loginMsgLabel.classList.add('redLabel');
             break;
         case WRONG_PASSWORD:
             console.log("Contraseña Incorrecta");
+            loginMsgLabel.textContent = 'Contraseña incorrecta';
+            loginMsgLabel.className = '';
+            loginMsgLabel.classList.add('redLabel');
             break;
         case LOGIN_OK:
             console.log("Login ok usuario: " + mailInput.value + " -->> Voy a pagina del juego");
@@ -108,7 +123,7 @@ customForm.addEventListener('submit', function (event) {
     }
 });
 
-function checkPassword(input_mail, input_password) {
+function checkPasswordAndLoadList(input_mail, input_password) {
     const user = JSON.parse(localStorage.getItem(input_mail));
     if (user === null)
         return USER_NOT_FOUND;
