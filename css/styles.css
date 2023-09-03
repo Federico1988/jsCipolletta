@@ -26,11 +26,12 @@ h1 {
   font-size: large;
 }
 
-.backgroundImage {
+.backgroundImageIdx,
+.backgroundImageGame {
   z-index: 1;
 }
 
-.backgroundImage:before {
+.backgroundImageIdx:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -38,7 +39,24 @@ h1 {
   bottom: 0;
   left: 0;
   right: 0;
-  background-image: url(../img/letters.jpg);
+  background-image: url("../img/letters.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  opacity: 0.2;
+  filter: alpha(opacity=40);
+  height: 100%;
+  width: 100%;
+}
+
+.backgroundImageGame:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: url("../img/fallingLetters.jpg");
   background-repeat: no-repeat;
   background-size: 100%;
   opacity: 0.2;
@@ -55,6 +73,13 @@ h1 {
   display: inline-block;
   font-size: large;
   margin-bottom: 5px;
+}
+
+.formDiv {
+  width: 50%;
+  /* 2/3 of the screen width */
+  display: flex;
+  justify-content: right;
 }
 
 form {
@@ -108,6 +133,39 @@ form .form-control:focus {
 #reglasDiv p {
   font-size: large;
   font-weight: 500;
+}
+
+.scoresDiv {
+  padding: 20px;
+  max-width: 480px;
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.scrollable-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.scrollable-list ul .item {
+  margin: 5px;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+.scrollable-list ul .item.center {
+  transform: scale(1);
+}
+.scrollable-list ul .label {
+  font-weight: bold;
+  margin-right: 5px;
 }
 
 /*# sourceMappingURL=styles.css.map */

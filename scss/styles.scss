@@ -16,7 +16,7 @@ h1 {
 
 .redLabel {
     color: red;
-    font-weight: bold;  
+    font-weight: bold;
     font-size: large;
 }
 
@@ -26,11 +26,7 @@ h1 {
     font-size: large;
 }
 
-.backgroundImage {
-    z-index: 1;
-}
-
-.backgroundImage:before {
+@mixin backgroundImage($picture_path) {
     content: "";
     position: absolute;
     z-index: -1;
@@ -38,13 +34,26 @@ h1 {
     bottom: 0;
     left: 0;
     right: 0;
-    background-image: url(../img/letters.jpg);
+    background-image: url($picture_path);
     background-repeat: no-repeat;
     background-size: 100%;
     opacity: 0.2;
     filter: alpha(opacity=40);
     height: 100%;
     width: 100%;
+}
+
+.backgroundImageIdx,
+.backgroundImageGame {
+    z-index: 1;
+}
+
+.backgroundImageIdx:before {
+    @include backgroundImage("../img/letters.jpg");
+}
+
+.backgroundImageGame:before {
+    @include backgroundImage("../img/fallingLetters.jpg");
 }
 
 .fullWidth {
@@ -57,7 +66,15 @@ h1 {
     margin-bottom: 5px;
 }
 
+.formDiv {
+    width: 50%;
+    /* 2/3 of the screen width */
+    display: flex;
+    justify-content: right;
+}
+
 form {
+
     text-align: left;
     border: 3px solid #007bff;
     border-radius: 10px;
@@ -113,5 +130,42 @@ form {
     p {
         font-size: large;
         font-weight: 500;
+    }
+}
+
+.scoresDiv {
+    padding: 20px;
+    max-width: 480px;
+}
+
+.scrollable-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+
+        .item {
+            margin: 5px;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+
+            &.center {
+                transform: scale(1);
+            }
+        }
+
+        .label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
     }
 }
