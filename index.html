@@ -25,59 +25,65 @@
 
 <body>
 
-    <main>
+    <main class="backgroundImage">
 
+        <h1>Letras Luminosas: El Desafío de la Memoria</h1>
         <div class="formDiv container-fluid">
 
-            <h1>Simulador JS de Federico Cipolletta</h1>
             <form id="customForm" action="">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label class="formLabel" for="name">Ingresá tu nombre:</label>
+<!--                     <div>
+                        <label class="formLabel" for="name">Nombre:</label>
                         <div class="input-group">
-                            <input id="inputName" type="text" name="name" id="name" class="form-control">
+                            <input id="nameInput" type="text" name="name" id="name" required class="form-control fullWidth">
+                        </div>
+                    </div> -->
+                    <div>
+                        <label class="formLabel" for="email">Usuario</label>
+                        <div class="input-group">
+                            <input id="emailInput" type="email" placeholder="email@domain.com" required class="form-control fullWidth">
                         </div>
                     </div>
-                    <div class="col-md-6    ">
-                        <label class="formLabel" for="email">Ingresá tu email:</label>
+                    <div>
+                        <label class="formLabel" for="password">Contraseña</label>
                         <div class="input-group">
-                            <input id="inputMail" type="email" placeholder="email@domain.com" required name="email"
-                                id="email" class="form-control">
+                            <input id="passwordInput" type="password" required class="form-control fullWidth">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="text-center">
-                            <input type="reset" value="Resetear" class="btn btn-secondary">
-                            <input id="submitButton" type="submit" value="Enviar datos" class="btn btn-primary">
-                        </div>
+                            <input id="logginButton" type="submit" value="Ingresar" class="btn btn-primary fullWidth">
+                            <input id="registerButton" type="button" value="Registrarse" class="btn btn-secondary fullWidth">
+                            <label id="loginMsgLabel"></label>
                     </div>
                 </div>
             </form>
-            <div class="buttonsDiv">
-                <button class="buttonClass" id="customPromptBtn">Ingresar nueva palabra!</button>
-                <button class="buttonClass" id="startCounBtn">Comenzar Cuenta de Letras</button>
-                <button class="buttonClass" id="orderWords">Comenzar Orden de Palabras</button>
-            </div>
-            <div id="reglasDiv">
-                <h2>Reglas de juegos: </h2>
-
-                <p>
-                    En primer lugar, ingrese palabras usando el boton de arriba (minimo 5 palabras). El cuadro pedirá
-                    una palabra y una letra. Recuérdelas. (No vale anotar en papel!). Ud puede agregar palabras en cualquier momento.
-                </p>
-                <p>
-                    Juego Cuenta de Letras:
-                    Ud deberá ingresar cuántas veces aparece la letra en la palabra que ud ingresó anteriormente. El
-                    cuadro solo le indicará el número de orden de la palabra (1er palabra, 2da palabra, etc).
-                </p>
-                <p>
-                    Juego Orden de Palabras:
-                    Ud deberá ingresar las palabras nuevamente, en el orden correcto.
-                </p>
-            </div>
         </div>
+        <div class="buttonsDiv">
+            <button class="buttonClass" id="customPromptBtn">Ingresar nueva palabra!</button>
+            <button class="buttonClass" id="startCounBtn">Comenzar Cuenta de Letras</button>
+            <button class="buttonClass" id="orderWords">Comenzar Orden de Palabras</button>
+        </div>
+        <div id="reglasDiv">
+            <h2>Reglas de juegos: </h2>
+
+            <p>
+                En primer lugar, ingrese palabras usando el boton de arriba (minimo 5 palabras). El cuadro pedirá
+                una palabra y una letra. Recuérdelas. (No vale anotar en papel!). Ud puede agregar palabras en cualquier
+                momento.
+            </p>
+            <p>
+                Juego Cuenta de Letras:
+                Ud deberá ingresar cuántas veces aparece la letra en la palabra que ud ingresó anteriormente. El
+                cuadro solo le indicará el número de orden de la palabra (1er palabra, 2da palabra, etc).
+            </p>
+            <p>
+                Juego Orden de Palabras:
+                Ud deberá ingresar las palabras nuevamente, en el orden correcto.
+            </p>
+        </div>
+
 
     </main>
     <footer>

@@ -1,12 +1,24 @@
-let inputWordButton = document.getElementById("customPromptBtn"),
+const inputWordButton = document.getElementById("customPromptBtn"),
     startCountButton = document.getElementById("startCounBtn"),
     orderWordsButton = document.getElementById("orderWords"),
     customForm = document.getElementById('customForm'),
-    reglas = document.getElementById('reglasDiv');
+    reglas = document.getElementById('reglasDiv'),
+    logginButton = document.getElementById('logginButton'),
+    registerButton = document.getElementById('registerButton'),
+    mailInput = document.querySelector("#emailInput"),
+    passwordInput = document.querySelector("#passwordInput"),
+    nameInput = document.querySelector("#nameInput"),
+    loginMsgLabel = document.querySelector("#loginMsgLabel");
 
-alert("Bienvenido! Esto es un juego de memoria, que cuenta apariciones de letras.\nPara comenzar, por favor ingrese sus datos.")
-let vocales = ["a", "e", "i", "o", "u"];
-
+const vocales = ["a", "e", "i", "o", "u"];
+const USER_NOT_FOUND = 0, WRONG_PASSWORD = 1, LOGIN_OK = 2;
+class User {
+    constructor(userName, password, wordList) {
+        this.userName = userName;
+        this.password = password;
+        this.wordList = wordList;
+    }
+}
 
 class InputWord {
     constructor(word, letra) {
@@ -53,29 +65,58 @@ class InputWord {
 
 }
 
-let wordsList = [];
+let currentWordList = [];
 
 //Lleno la lista para la parte de testing (asi no tengo que ingresar todas a mano), en realidad el usuario ingresa todas. Las dejo comentadas para prox test
-/*wordsList.push(new InputWord("Hola", "L"));
-wordsList.push(new InputWord("Chau", "L"));
-wordsList.push(new InputWord("Mesa", "M"));
-wordsList.push(new InputWord("Milanesa", "N"));
-wordsList.push(new InputWord("Acondicionado", "N"));*/
+/*currentWordList.push(new InputWord("Hola", "L"));
+currentWordList.push(new InputWord("Chau", "L"));
+currentWordList.push(new InputWord("Mesa", "M"));
+currentWordList.push(new InputWord("Milanesa", "N"));
+currentWordList.push(new InputWord("Acondicionado", "N"));*/
 
-customForm.addEventListener('reset', function (event) {
+registerButton.addEventListener('click', function (event) {
+
+
 
     inputWordButton.style.display = 'none';
-
     startCountButton.style.display = 'none';
 });
-customForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-    var form = event.target;
-    if (form.checkValidity()) {
-        inputWordButton.style.display = 'block';
-        reglas.style.display = 'block';
+
+logginButton.addEventListener('click', function (event) {
+
+    if (customForm.checkValidity()) {
+        //inputWordButton.style.display = 'block';
+        //reglas.style.display = 'block';
+        switch (checkPassword(mailInput.value, passwordInput.value)) {
+            case USER_NOT_FOUND:
+                console.log("Usuario No Encontrado");
+                break;
+            case WRONG_PASSWORD:
+                console.log("Contraseña Incorrecta");
+                break;
+            case LOGIN_OK:
+                console.log("Login ok usuario: " + mailInput.value + " -->> Voy a pagina del juego");
+                break;
+        }
     }
+    //moverse de pagina
 });
+
+function checkPassword(input_mail, input_password) {
+    const user = JSON.parse(localStorage.getItem(input_mail));
+    if (user === null)
+        return USER_NOT_FOUND;
+    else if (user.password != input_password)
+        return WRONG_PASSWORD;
+    else {
+        currentWordList = wordList;//Cargo la lista
+        return LOGIN_OK;
+    }
+
+
+}
+
+
 
 //Manejo del prompt
 inputWordButton.addEventListener("click", async () => {
@@ -132,13 +173,13 @@ inputWordButton.addEventListener("click", async () => {
 
 
 
-        wordsList.push(new InputWord(promptValues[0], promptValues[1]));
-        if (wordsList.length >= 5) {
+        currentWordList.push(new InputWord(promptValues[0], promptValues[1]));
+        if (currentWordList.length >= 5) {
             startCountButton.style.display = 'block';
             orderWordsButton.style.display = 'block'
         }
         console.log("--> Lista de palabras: ");
-        console.log(wordsList);
+        console.log(currentWordList);
 
 
     } while (!inputCorrect && --tries !== 0);
@@ -146,7 +187,7 @@ inputWordButton.addEventListener("click", async () => {
 
 startCountButton.addEventListener("click", async () => {
     borrarPuntaje();
-    for (const [index, element] of wordsList.entries()) {
+    for (const [index, element] of currentWordList.entries()) {
         console.log("Analizando elemento: " + element.word);
         let userAnswer = prompt("Cuantas veces aparecía la letra solicitada en la " + (index + 1) + "° palabra ingresada?\nAprete Cancelar salir");
 
@@ -161,7 +202,7 @@ startCountButton.addEventListener("click", async () => {
     }
 
     console.log("--->Resultados:")
-    console.log(wordsList);
+    console.log(currentWordList);
 
     //Sumo el puntaje total y lo muestro
     calcularYmostrarResultado('Cuenta de Letras', "puntajeObtenido_letras");
@@ -169,7 +210,7 @@ startCountButton.addEventListener("click", async () => {
 
 orderWordsButton.addEventListener("click", async () => {
     borrarPuntaje();
-    for (const [index, element] of wordsList.entries()) {
+    for (const [index, element] of currentWordList.entries()) {
         console.log("Analizando elemento: " + element.word);
         let userAnswer = prompt("Ingrese la " + (index + 1) + "° palabra ingresada previamente\nAprete Cancelar para salir");
 
@@ -177,11 +218,11 @@ orderWordsButton.addEventListener("click", async () => {
             break;
 
 
-        const foundElement = wordsList.find(el => el.word.toUpperCase() === userAnswer.toUpperCase());
+        const foundElement = currentWordList.find(el => el.word.toUpperCase() === userAnswer.toUpperCase());
 
         if (foundElement) {
             console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta en la posicion " + index + " es: " + element.word);
-            let indexOfFoundElement = wordsList.indexOf(foundElement);
+            let indexOfFoundElement = currentWordList.indexOf(foundElement);
             console.log("La palabra igresada se encuentra en la posicion: " + indexOfFoundElement);
             const distancia = indexOfFoundElement - index;
             switch (distancia) {
@@ -207,7 +248,7 @@ orderWordsButton.addEventListener("click", async () => {
     }
 
     console.log("--->Resultados:")
-    console.log(wordsList);
+    console.log(currentWordList);
 
     //Sumo el puntaje total y lo muestro
     calcularYmostrarResultado('Orden de Palabras', "puntajeObtenido_palabras");
@@ -223,7 +264,7 @@ function calcularYmostrarResultado(nombreJuego, campo) {
     let puntaje = 0;
     let puntajeMaximo = 0;
 
-    wordsList.forEach(el => {
+    currentWordList.forEach(el => {
         puntaje += el[campo];
         puntajeMaximo += el.puntaje;
     });
@@ -234,5 +275,5 @@ function calcularYmostrarResultado(nombreJuego, campo) {
 }
 
 function borrarPuntaje() {
-    wordsList.forEach(el => el.borrarPuntaje());
+    currentWordList.forEach(el => el.borrarPuntaje());
 }

@@ -11,25 +11,78 @@ html {
 h1 {
     margin: 20px;
     font-size: xx-large;
-    font-style: italic;
+    font-weight: bold;
+}
+
+.redLabel {
+    color: red;
+}
+
+.greenLlabel {
+    color: green;
+}
+
+.backgroundImage {
+    z-index: 1;
+}
+
+.backgroundImage:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: url(../img/letters.jpg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    opacity: 0.2;
+    filter: alpha(opacity=40);
+    height: 100%;
+    width: 100%;
+}
+
+.fullWidth {
+    width: 100%;
 }
 
 .formLabel {
     display: inline-block;
-    width: 250px;
-    padding: 5px;
     font-size: large;
-    margin: 20px;
+    margin-bottom: 5px;
 }
 
 form {
     text-align: left;
+    border: 3px solid #007bff;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 330px;
+    background-color: white;
 
     input,
     textarea {
         padding: 5px;
         font-size: large;
-        margin: 20px;
+        margin-bottom: 40px;
+    }
+
+    .form-control {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 2px solid #007bff;
+        /* Change the color if desired */
+    }
+
+    .form-control:focus {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 2px solid #0ea00e;
+        /* Change the color if desired */
+
     }
 
     margin-top: 30px;
