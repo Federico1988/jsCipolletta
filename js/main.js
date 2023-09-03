@@ -172,11 +172,13 @@ function crearLista(arr) {
     if (arr.length)
         for (const el of arr) {
             wordElement = `
-      <li class=listElement> ${el.word} Letra: ${el.letra} <li>
-      `;
-            //se la agrego al contenedor
-            // ulWords.appendChild(wordElement);.
-            ulWords.innerHTML = ulWords.innerHTML + wordElement;
+            <li class="ulElement">
+              <div class="ulColumn">${el.word}</div>
+              <div class="ulColumn">Letra: ${el.letra}</div>
+              <div class="ulColumn"><button class="removeButton">Quitar</button></div>
+            </li>
+          `;            //se la agrego al contenedor
+            ulWords.innerHTML += wordElement;
         }
 }
 
