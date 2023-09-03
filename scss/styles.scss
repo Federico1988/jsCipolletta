@@ -46,6 +46,7 @@ h1 {
 .backgroundImageIdx,
 .backgroundImageGame {
     z-index: 1;
+    padding: 20px;
 }
 
 .backgroundImageIdx:before {
@@ -169,8 +170,14 @@ form {
     font-size: larger;
 }
 
-
 .removeButton {
     padding: 5px;
     border-radius: 5px;
+}
+.addLetter{
+    justify-content: space-between;
+}
+
+.gameDiv{
+    display: inline-flex;
 }

@@ -29,16 +29,26 @@
             <h2 id="userNameLabel"> title</h2>
             <p id="scoresText"></p>
         </div>
-        <div id="wordsDiv" class="col-md-6">
-            <ul class="scrollable-list" id="ulWords">
+        <div class="container-fluid gameDiv">
+            <div id="wordsDiv" class="col-md-6">
+                <h3>Listado de palabras</h3>
+                <ul class="scrollable-list" id="ulWords"> </ul>
+                <div class="input-group addLetter">
+                    <!--                 <input id="wordInput" type="text" placeholder="Palabra" required class="form-control fullWidth">
+                <input id="letterInput" type="text" placeholder="Letra" required class="form-control fullWidth"> -->
+                    <input id="inputWordButton" type="button" value="Agregar Palabra"
+                        class="btn btn-secondary fullWidth">
 
-            </ul>
-        </div>
-        <div class="col-md-3">
+                </div>
+            </div>
+            <div class="col-md-3">
 
-        </div>
-        <div class="col-md-3">
+                <button class="buttonClass" id="startCounBtn">Comenzar Cuenta de Letras</button>
+                <button class="buttonClass" id="orderWords">Comenzar Orden de Palabras</button>
+            </div>
+            <div class="col-md-3">
 
+            </div>
         </div>
     </main>
 

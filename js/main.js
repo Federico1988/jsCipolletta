@@ -1,4 +1,4 @@
-const inputWordButton = document.getElementById("customPromptBtn"),
+const inputWordButton = document.getElementById("inputWordButton"),
     startCountButton = document.getElementById("startCounBtn"),
     orderWordsButton = document.getElementById("orderWords"),
     customForm = document.getElementById('customForm'),
@@ -20,6 +20,20 @@ class User {
         this.password = password;
         this.wordList = wordList;
         this.maxScore = maxScore;
+    }
+    serialize() {
+        // Convert a User instance to a plain object
+        return {
+            password: this.password,
+            maxScore: this.maxScore,
+            wordList: this.wordList.map(inputWord => inputWord.serialize()),
+        };
+    }
+
+    static deserialize(obj) {
+        const user = new User(obj.password, [], obj.maxScore);
+        user.wordList = obj.wordList.map(inputWordObj => deserializeInputWord(inputWordObj));
+        return user;
     }
 }
 
@@ -66,6 +80,16 @@ class InputWord {
         this.puntajeObtenido_palabras = 0;
     }
 
+    serialize() {
+        return {
+            word: this.word,
+            letra: this.letra,
+            cantidad: this.cantidad,
+            puntajeObtenido_letras: this.puntajeObtenido_letras,
+            puntajeObtenido_palabras: this.puntajeObtenido_palabras,
+        };
+    }
+
 }
 
 let currentWordList = [];
@@ -84,7 +108,8 @@ if (registerButton)
         loginMsgLabel.textContent = '';
 
         if (customForm.checkValidity()) {
-            const user = JSON.parse(localStorage.getItem(mailInput.value));
+            //const user = JSON.parse(localStorage.getItem(mailInput.value));
+            const user = getUserFromLocalStorage(mailInput.value)
             if (user != null) {
 
                 loginMsgLabel.textContent = 'El usuario ya existe!';
@@ -92,7 +117,8 @@ if (registerButton)
                 loginMsgLabel.classList.add('redLabel');
             }
             else {
-                localStorage.setItem(mailInput.value, JSON.stringify(new User(passwordInput.value, [], 0)));
+                //localStorage.setItem(mailInput.value, JSON.stringify(new User(passwordInput.value, [], 0)));
+                saveUserToLocalStorage(mailInput.value, new User(passwordInput.value, [], 0))
                 mailInput.vale = "";
                 passwordInput.value = "";
                 loginMsgLabel.textContent = 'Registrado!';
@@ -105,8 +131,8 @@ if (registerButton)
             loginMsgLabel.className = '';
             loginMsgLabel.classList.add('redLabel');
         }
-        inputWordButton.style.display = 'none';
-        startCountButton.style.display = 'none';
+        /*         inputWordButton.style.display = 'none';
+                startCountButton.style.display = 'none'; */
     });
 
 //esto pasa en indx.html
@@ -136,7 +162,7 @@ if (customForm)
 
 
 function checkPasswordAndLoadList(input_mail, input_password) {
-    const user = JSON.parse(localStorage.getItem(input_mail));
+    const user = getUserFromLocalStorage(input_mail);
     if (user === null)
         return USER_NOT_FOUND;
     else if (user.password != input_password)
@@ -146,19 +172,19 @@ function checkPasswordAndLoadList(input_mail, input_password) {
     }
 }
 
-let user;
+let user, loggedUser;
 //esto pasa en game.html
 if (userNameLabel) {
-    const loggedUser = sessionStorage.getItem("loggedUser");
+    loggedUser = sessionStorage.getItem("loggedUser");
     if (loggedUser) {
         userNameLabel.textContent = "Usuario: " + loggedUser;
         //console.log("Usuario: " + loggedUser);
-        user = JSON.parse(localStorage.getItem(loggedUser));
+        user = getUserFromLocalStorage(loggedUser);
         console.log(user);
         scoresText.textContent = "Puntaje maximo: " + user.maxScore;
         currentWordList = user.wordList;
         console.log(currentWordList);
-        crearLista(currentWordList);
+        mostrarLista(currentWordList);
     }
     else {
         console.log("Got here without user! How dare you? Send you back to login page ;)");
@@ -167,8 +193,9 @@ if (userNameLabel) {
 }
 
 
-function crearLista(arr) {
+function mostrarLista(arr) {
     let wordElement;
+    ulWords.innerHTML = ''; //primero clear
     if (arr.length)
         for (const el of arr) {
             wordElement = `
@@ -180,6 +207,8 @@ function crearLista(arr) {
           `;            //se la agrego al contenedor
             ulWords.innerHTML += wordElement;
         }
+    if (arr.length >= 5)
+        showGameButtons();
 }
 
 if (ulWords)
@@ -197,6 +226,8 @@ function deleteElementByWord(palabra) {
     for (let i = 0; i < currentWordList.length; i++) {
         if (currentWordList[i].word === palabra) {
             currentWordList.splice(i, 1);
+            user.wordList = currentWordList;
+            saveUserToLocalStorage(loggedUser, user);
             break;
         }
     }
@@ -204,7 +235,7 @@ function deleteElementByWord(palabra) {
 
 
 
-//Manejo del prompt
+//Manejo del custom prompt. Lo deje porque es unp hecho a mano, no es el prompt default.
 if (inputWordButton)
     inputWordButton.addEventListener("click", async () => {
         let inputCorrect = false;
@@ -258,12 +289,15 @@ if (inputWordButton)
             inputCorrect = true;
 
             currentWordList.push(new InputWord(promptValues[0], promptValues[1]));
-            if (currentWordList.length >= 5) {
-                startCountButton.style.display = 'block';
-                orderWordsButton.style.display = 'block'
-            }
+            /*             if (currentWordList.length >= 5) {
+                            startCountButton.style.display = 'block';
+                            orderWordsButton.style.display = 'block'
+                        } */
+            user.wordList = currentWordList;
+            saveUserToLocalStorage(loggedUser, user);
             console.log("--> Lista de palabras: ");
             console.log(currentWordList);
+            mostrarLista(currentWordList); // Refresco la lista
 
 
         } while (!inputCorrect && --tries !== 0);
@@ -362,4 +396,38 @@ function calcularYmostrarResultado(nombreJuego, campo) {
 
 function borrarPuntaje() {
     currentWordList.forEach(el => el.borrarPuntaje());
+}
+
+function showGameButtons() {
+
+    startCountButton.style.display = 'block';
+    orderWordsButton.style.display = 'block'
+}
+function hideGameButtons() {
+
+    startCountButton.style.display = 'none';
+    orderWordsButton.style.display = 'none'
+}
+
+function deserializeInputWord(obj) {
+    const inputWord = new InputWord(obj.word, obj.letra);
+    inputWord.cantidad = obj.cantidad;
+    inputWord.puntajeObtenido_letras = obj.puntajeObtenido_letras;
+    inputWord.puntajeObtenido_palabras = obj.puntajeObtenido_palabras;
+    return inputWord;
+}
+
+//Serializo y guardo
+function saveUserToLocalStorage(username, user) {
+    localStorage.setItem(username, JSON.stringify(user.serialize()));
+}
+
+//Leo y de-serializo
+function getUserFromLocalStorage(username) {
+    const storedUser = JSON.parse(localStorage.getItem(username));
+    if (storedUser) {
+        return User.deserialize(storedUser);
+    } else {
+        return null;
+    }
 }
