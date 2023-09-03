@@ -182,6 +182,28 @@ function crearLista(arr) {
         }
 }
 
+if (ulWords)
+    ulWords.addEventListener('click', function (event) {
+        const target = event.target;
+        if (target.classList.contains('removeButton')) {
+            const word = target.parentElement.parentElement.querySelector('.ulColumn:first-child').textContent;
+            deleteElementByWord(word);
+            target.parentElement.parentElement.remove();
+            console.log(currentWordList);
+        }
+    });
+
+function deleteElementByWord(palabra) {
+    for (let i = 0; i < currentWordList.length; i++) {
+        if (currentWordList[i].word === palabra) {
+            currentWordList.splice(i, 1);
+            break;
+        }
+    }
+}
+
+
+
 //Manejo del prompt
 if (inputWordButton)
     inputWordButton.addEventListener("click", async () => {
