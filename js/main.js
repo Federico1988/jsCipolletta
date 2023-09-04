@@ -344,8 +344,8 @@ function commonSetupsAfterGame() {
     answerInput.style.display = 'none';
     submitAnswer.style.display = 'none';
     cancelButton.style.display = 'none';
-    instruction.value = "";
-    gameName.value = "";
+    instruction.textContent = "";
+    gameName.textContent = "";
 }
 
 cancelButton.addEventListener('click', async () => {
@@ -363,7 +363,7 @@ submitAnswer.addEventListener('click', async () => {
 
     if (gameInCurse == 'Cuenta de Letras') {
         console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + currentWordList[idx].contarLetra());
-
+//TODO chequear que efectivamente ingreso un numero
         let numAnswer = parseInt(userAnswer);
         currentWordList[idx].computarPuntaje(numAnswer);
         console.log("Consiguio: " + currentWordList[idx].puntajeObtenido_letras + " de " + currentWordList[idx].puntaje);
