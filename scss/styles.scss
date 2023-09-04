@@ -116,8 +116,10 @@ form {
     justify-content: center;
 }
 
-.buttonClass {
+.hidden{
     display: none;
+}
+.buttonClass {
     padding: 15px;
     font-size: larger;
     font-weight: 500;

@@ -15,7 +15,8 @@ const inputWordButton = document.getElementById("inputWordButton"),
     gameName = document.querySelector("#gameName"),
     instruction = document.querySelector("#instruction"),
     submitAnswer = document.querySelector("#submitAnswer"),
-    answerInput = document.querySelector("#answerInput");
+    answerInput = document.querySelector("#answerInput"),
+    cancelButton = document.querySelector("#cancelButton");
 
 const vocales = ["a", "e", "i", "o", "u"];
 const USER_NOT_FOUND = 0, WRONG_PASSWORD = 1, LOGIN_OK = 2;
@@ -310,10 +311,8 @@ let idx = 0;
 //Seteo para el juego de cuenta de letras
 if (startCountButton)
     startCountButton.addEventListener("click", async () => {
-        idx = 0;
+        commonSetupsBeforeGame();
         gameName.textContent = "Cuenta de letras!"
-        hideWordList();
-        borrarPuntaje();
         gameInCurse = 'Cuenta de Letras';
         instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?\nPresione Cancelar salir";
     });
@@ -322,14 +321,36 @@ if (startCountButton)
 //Seteo para el juego de orden de palabras
 if (orderWordsButton)
     orderWordsButton.addEventListener("click", async () => {
-        idx = 0;
+        commonSetupsBeforeGame();
         gameName.textContent = "Orden de Palabras!"
-        hideWordList();
-        borrarPuntaje();
         gameInCurse = 'Orden de Palabras';
         instruction.textContent = "Ingrese la " + (idx + 1) + "° palabra ingresada previamente\Presione Cancelar para salir";
     })
 
+function commonSetupsBeforeGame() {
+    console.log("Restarting Game");
+    idx = 0;
+    hideWordList();
+    borrarPuntaje();
+    answerInput.style.display = 'block';
+    submitAnswer.style.display = 'block';
+    cancelButton.style.display = 'block';
+}
+
+function commonSetupsAfterGame() {
+    console.log("Finish Game");
+    idx = 0;
+    showGameButtons();
+    answerInput.style.display = 'none';
+    submitAnswer.style.display = 'none';
+    cancelButton.style.display = 'none';
+    instruction.value = "";
+    gameName.value = "";
+}
+
+cancelButton.addEventListener('click', async () => {
+    commonSetupsAfterGame();
+})
 
 //Proceso respuestas que envia el usuario (Game Engine)
 submitAnswer.addEventListener('click', async () => {
@@ -391,7 +412,6 @@ submitAnswer.addEventListener('click', async () => {
 });
 
 
-
 function hasNumbers(inputString) {
     return /\d/.test(inputString);
 }
@@ -408,8 +428,17 @@ function calcularYmostrarResultado(nombreJuego, campo) {
 
     const rendimiento = ((puntaje / puntajeMaximo) * 100).toFixed(0);
 
+    if (puntaje > user.maxScore) {
+        user.maxScore = puntaje;
+        saveUserToLocalStorage(loggedUser, user);
+        scoresText.textContent = "Puntaje maximo: " + user.maxScore;
+        //Send flowers up
+    }
+
     //TODO: PASAR A DOM!
     alert("Puntaje obtenido en " + nombreJuego + ": " + puntaje + " de un máximo de " + puntajeMaximo + "\nRendimiento: " + rendimiento + "%");
+
+    commonSetupsAfterGame();
 }
 
 function borrarPuntaje() {
@@ -419,12 +448,12 @@ function borrarPuntaje() {
 function showGameButtons() {
 
     startCountButton.style.display = 'block';
-    orderWordsButton.style.display = 'block'
+    orderWordsButton.style.display = 'block';
 }
 function hideGameButtons() {
 
     startCountButton.style.display = 'none';
-    orderWordsButton.style.display = 'none'
+    orderWordsButton.style.display = 'none';
 }
 
 function deserializeInputWord(obj) {
