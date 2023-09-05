@@ -405,7 +405,7 @@ if (submitAnswer)
 
             } else {
                 console.log("No se encuentra el elemento, resta el puntaje de la palabra correcta");
-                currentWordList[idx].puntajeObtenido_palabras -= element.puntaje;
+                currentWordList[idx].puntajeObtenido_palabras -= currentWordList[idx].puntaje;
                 //continue; // sigo con la proxima palabra
             }
 
