@@ -161,7 +161,7 @@ if (customForm)
             case LOGIN_OK:
                 console.log("Login ok usuario: " + mailInput.value + " -->> Voy a pagina del juego");
                 sessionStorage.setItem("loggedUser", mailInput.value)
-                window.location.href = '/paginas/game.html'
+                window.location.href = 'paginas/game.html'
                 break;
         }
     });
