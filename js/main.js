@@ -16,7 +16,9 @@ const inputWordButton = document.getElementById("inputWordButton"),
     instruction = document.querySelector("#instruction"),
     submitAnswer = document.querySelector("#submitAnswer"),
     answerInput = document.querySelector("#answerInput"),
-    cancelButton = document.querySelector("#cancelButton");
+    cancelButton = document.querySelector("#cancelButton"),
+    answersDiv = document.querySelector("#answerDiv"),
+    scoreh3 = document.querySelector("#scoreh3");
 
 const vocales = ["a", "e", "i", "o", "u"];
 const USER_NOT_FOUND = 0, WRONG_PASSWORD = 1, LOGIN_OK = 2;
@@ -178,6 +180,7 @@ function checkPasswordAndLoadList(input_mail, input_password) {
 
 let user, loggedUser;
 //esto pasa en game.html
+
 if (userNameLabel) {
     loggedUser = sessionStorage.getItem("loggedUser");
     if (loggedUser) {
@@ -206,7 +209,7 @@ function mostrarLista(arr) {
             <li class="ulElement">
               <div class="ulColumn">${el.word}</div>
               <div class="ulColumn">Letra: ${el.letra}</div>
-              <div class="ulColumn"><button class="roundedButton">Quitar</button></div>
+              <div class="ulColumn"><button class="roundedButton removeButton">Quitar</button></div>
             </li>
           `;            //se la agrego al contenedor
             ulWords.innerHTML += wordElement;
@@ -314,7 +317,7 @@ if (startCountButton)
         commonSetupsBeforeGame();
         gameName.textContent = "Cuenta de letras!"
         gameInCurse = 'Cuenta de Letras';
-        instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?\nPresione Cancelar salir";
+        instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?";
     });
 
 
@@ -332,8 +335,10 @@ function commonSetupsBeforeGame() {
     idx = 0;
     hideWordList();
     borrarPuntaje();
+    scoreh3.textContent = "";
     answerInput.style.display = 'block';
     submitAnswer.style.display = 'block';
+    answersDiv.style.display = 'block';
     cancelButton.style.display = 'block';
 }
 
@@ -341,75 +346,76 @@ function commonSetupsAfterGame() {
     console.log("Finish Game");
     idx = 0;
     showGameButtons();
-    answerInput.style.display = 'none';
-    submitAnswer.style.display = 'none';
-    cancelButton.style.display = 'none';
-    instruction.textContent = "";
-    gameName.textContent = "";
+    answersDiv.style.display = 'none';
+    showWordList();
 }
 
-cancelButton.addEventListener('click', async () => {
-    commonSetupsAfterGame();
-})
+if (cancelButton)
+    cancelButton.addEventListener('click', async () => {
+        commonSetupsAfterGame();
+    })
 
 //Proceso respuestas que envia el usuario (Game Engine)
-submitAnswer.addEventListener('click', async () => {
-    let userAnswer = answerInput.value;
-    answerInput.value = "";
-    if (userAnswer === null || userAnswer == "FIN")
-        return;
+if (submitAnswer)
+    submitAnswer.addEventListener('click', async () => {
+        answerInput.focus();
+        let userAnswer = answerInput.value;
 
-    console.log("Analizando elemento: " + currentWordList[idx].word);
+        answerInput.value = "";
+        if (userAnswer === null || userAnswer == "FIN")
+            return;
 
-    if (gameInCurse == 'Cuenta de Letras') {
-        console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + currentWordList[idx].contarLetra());
-//TODO chequear que efectivamente ingreso un numero
-        let numAnswer = parseInt(userAnswer);
-        currentWordList[idx].computarPuntaje(numAnswer);
-        console.log("Consiguio: " + currentWordList[idx].puntajeObtenido_letras + " de " + currentWordList[idx].puntaje);
-        if (++idx < currentWordList.length)
-            instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?\nPresione Cancelar salir";
-        else
-            calcularYmostrarResultado(gameInCurse, "puntajeObtenido_letras");
+        console.log("Analizando elemento: " + currentWordList[idx].word);
 
-    }
-    else if (gameInCurse = 'Orden de Palabras') {
+        if (gameInCurse == 'Cuenta de Letras') {
+            console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + currentWordList[idx].contarLetra());
+            //TODO chequear que efectivamente ingreso un numero
+            let numAnswer = parseInt(userAnswer);
+            currentWordList[idx].computarPuntaje(numAnswer);
+            console.log("Consiguio: " + currentWordList[idx].puntajeObtenido_letras + " de " + currentWordList[idx].puntaje);
+            if (++idx < currentWordList.length)
+                instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?";
+            else
+                calcularYmostrarResultado(gameInCurse, "puntajeObtenido_letras");
 
-        const foundElement = currentWordList.find(el => el.word.toUpperCase() === userAnswer.toUpperCase());
+        }
+        else if (gameInCurse = 'Orden de Palabras') {
 
-        if (foundElement) {
-            console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta en la posicion " + idx + " es: " + currentWordList[idx].word);
-            let indexOfFoundElement = currentWordList.indexOf(foundElement);
-            console.log("La palabra igresada se encuentra en la posicion: " + indexOfFoundElement);
-            const distancia = indexOfFoundElement - idx;
-            switch (distancia) {
-                case 0:        //Si esta en la posicion correcta suma su puntaje
-                    currentWordList[idx].puntajeObtenido_palabras += currentWordList[idx].puntaje;
-                    break;
-                case 1:            //Si esta a 1 orden de distancia suma la mitad (+1 o -1)
-                case -1:
-                    currentWordList[idx].puntajeObtenido_palabras += currentWordList[idx].puntaje / 2;
-                    break
-                default:        //si esta a mas de un orde de distancia no suma nada
+            const foundElement = currentWordList.find(el => el.word.toUpperCase() === userAnswer.toUpperCase());
 
-                    break;
+            if (foundElement) {
+                console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta en la posicion " + idx + " es: " + currentWordList[idx].word);
+                let indexOfFoundElement = currentWordList.indexOf(foundElement);
+                console.log("La palabra igresada se encuentra en la posicion: " + indexOfFoundElement);
+                const distancia = indexOfFoundElement - idx;
+                switch (distancia) {
+                    case 0:        //Si esta en la posicion correcta suma su puntaje
+                        currentWordList[idx].puntajeObtenido_palabras += currentWordList[idx].puntaje;
+                        break;
+                    case 1:            //Si esta a 1 orden de distancia suma la mitad (+1 o -1)
+                    case -1:
+                        currentWordList[idx].puntajeObtenido_palabras += currentWordList[idx].puntaje / 2;
+                        break
+                    default:        //si esta a mas de un orde de distancia no suma nada
+
+                        break;
+                }
+
+                console.log("Suma en este palabra: " + currentWordList[idx].puntajeObtenido_palabras);
+
+            } else {
+                console.log("No se encuentra el elemento, resta el puntaje de la palabra correcta");
+                currentWordList[idx].puntajeObtenido_palabras -= element.puntaje;
+                //continue; // sigo con la proxima palabra
             }
 
-            console.log("Suma en este palabra: " + currentWordList[idx].puntajeObtenido_palabras);
-
-        } else {
-            console.log("No se encuentra el elemento, resta el puntaje de la palabra correcta");
-            currentWordList[idx].puntajeObtenido_palabras -= element.puntaje;
-            //continue; // sigo con la proxima palabra
+            if (++idx < currentWordList.length)
+                instruction.textContent = "Ingrese la " + (idx + 1) + "° palabra ingresada previamente\Presione Cancelar para salir";
+            else
+                calcularYmostrarResultado('Orden de Palabras', "puntajeObtenido_palabras");
         }
 
-        if (++idx < currentWordList.length)
-            instruction.textContent = "Ingrese la " + (idx + 1) + "° palabra ingresada previamente\Presione Cancelar para salir";
-        else
-            calcularYmostrarResultado('Orden de Palabras', "puntajeObtenido_palabras");
-    }
-
-});
+    });
 
 
 function hasNumbers(inputString) {
@@ -428,17 +434,21 @@ function calcularYmostrarResultado(nombreJuego, campo) {
 
     const rendimiento = ((puntaje / puntajeMaximo) * 100).toFixed(0);
 
+    let puntajeMax = false;
     if (puntaje > user.maxScore) {
         user.maxScore = puntaje;
         saveUserToLocalStorage(loggedUser, user);
         scoresText.textContent = "Puntaje maximo: " + user.maxScore;
-        //Send flowers up
+        startFireworks();
+        puntajeMax = true;
     }
 
-    //TODO: PASAR A DOM!
-    alert("Puntaje obtenido en " + nombreJuego + ": " + puntaje + " de un máximo de " + puntajeMaximo + "\nRendimiento: " + rendimiento + "%");
+    scoreh3.textContent = "Puntaje obtenido en " + nombreJuego + ": " + puntaje + " de un máximo de " + puntajeMaximo + "\nRendimiento: " + rendimiento + "%";
+    scoreh3.textContent += puntajeMax ? "\nNuevo Puntaje Máximo!" : "";
 
-    commonSetupsAfterGame();
+    submitAnswer.style.display = 'none'
+    answerInput.style.display = 'none';
+    //commonSetupsAfterGame();
 }
 
 function borrarPuntaje() {
@@ -487,4 +497,32 @@ function getUserFromLocalStorage(username) {
     } else {
         return null;
     }
+}
+
+function startFireworks() {
+    for (let i = 0; i < 15; i++) {
+        setTimeout(createFirework, i * 500);
+    }
+}
+
+function createFirework() {
+    const firework = document.createElement("div");
+    firework.classList.add("firework");
+
+    const randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+    firework.style.backgroundColor = randomColor;
+
+    const maxX = window.innerWidth - 10;
+    const maxY = window.innerHeight - 10;
+    const randomX = Math.random() * maxX + 5;
+    const randomY = Math.random() * maxY + 5;
+
+    firework.style.left = randomX + "px";
+    firework.style.top = randomY + "px";
+
+    document.body.appendChild(firework);
+
+    firework.addEventListener("animationend", () => {
+        document.body.removeChild(firework);
+    });
 }

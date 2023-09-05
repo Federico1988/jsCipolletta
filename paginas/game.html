@@ -30,7 +30,7 @@
             <p id="scoresText"></p>
         </div>
         <div class="container-fluid gameDiv">
-            <div id="wordsDiv" class="col-md-6">
+            <div id="wordsDiv" class="col-md-4">
                 <h3>Listado de palabras</h3>
                 <ul class="scrollable-list" id="ulWords"> </ul>
                 <div class="input-group addLetter">
@@ -41,20 +41,40 @@
 
                 </div>
             </div>
-            <div class="col-md-3">
-
-                <button class="buttonClass hidden" id="startCounBtn">Comenzar Cuenta de Letras</button>
-                <button class="buttonClass hidden" id="orderWords">Comenzar Orden de Palabras</button>
-                <button class="buttonClass hidden" id="cancelButton">Cancelar</button>
+            <div class="col-md-2 d-flex flex-column">
+                <button class="buttonClass roundedBigButton flex-grow-1" id="startCounBtn">Comenzar Cuenta de Letras</button>
+                <button class="buttonClass roundedBigButton flex-grow-1" id="orderWords">Comenzar Orden de Palabras</button>
+                <button class="buttonClass roundedBigButton flex-grow-1 hidden" id="cancelButton">Detener Juego</button>
             </div>
-            <div id="answerDiv" class="col-md-3">
+            <div id="answerDiv" class="col-md-6 hidden">
                 <h3 id="gameName"></h3>
                 <h4 id="instruction"></h4>
-                <div class="input-group">
-                    <input id="answerInput" type="text" required class="form-control hidden">
-                    <button class="roundedButton hidden" id="submitAnswer">Siguiente!</button>
+                <div class="input-group gameInput">
+                    <input id="answerInput" type="text" required class="form-control">
+                    <button class="roundedButton" id="submitAnswer">Siguiente!</button>
+                    <h3 id="scoreh3"></h3>
                 </div>
             </div>
+        </div>
+        <div id="reglasDiv">
+            <hr>
+            <h2>Reglas de juego</h2>
+
+            <h3>Ingreso de palabras:</h3>
+            <p>
+                En primer lugar, ingrese palabras usando el boton de arriba (mínimo 5 palabras). El cuadro pedirá
+                una palabra y una letra. Recuérdelas. (No vale anotar en papel!). Ud puede agregar palabras en cualquier
+                momento.
+            </p>
+            <h3> Juego Cuenta de Letras: </h3>
+            <p>
+                Ud deberá ingresar cuántas veces aparece la letra en la palabra que ud ingresó anteriormente. El
+                cuadro solo le indicará el número de orden de la palabra (1er palabra, 2da palabra, etc).
+            </p>
+            <h3>Juego Orden de Palabras:</h3>
+            <p>
+                Ud deberá ingresar las palabras nuevamente, en el orden correcto.
+            </p>
         </div>
     </main>
 

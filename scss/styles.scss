@@ -14,6 +14,11 @@ h1 {
     font-weight: bold;
 }
 
+h2{
+    margin-bottom: 20px;
+    font-size: xx-large;
+    font-style: italic;
+}
 .redLabel {
     color: red;
     font-weight: bold;
@@ -127,7 +132,6 @@ form {
 }
 
 #reglasDiv {
-    display: none;
     padding: 50px;
 
     p {
@@ -171,9 +175,14 @@ form {
     padding: 5px;
     font-size: larger;
 }
-
+.buttonsDiv{
+}
 .roundedButton {
     padding: 5px;
+    border-radius: 5px;
+}
+.roundedBigButton {
+    padding: 15px;
     border-radius: 5px;
 }
 .addLetter{
@@ -182,4 +191,32 @@ form {
 
 .gameDiv{
     display: inline-flex;
+}
+#answerDiv{
+    padding: 30px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+.gameInput{
+    padding: 60px;
+    justify-content: space-around;
+}
+
+.firework {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    animation: explode 0.6s linear;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(10);
+        opacity: 0;
+    }
 }
