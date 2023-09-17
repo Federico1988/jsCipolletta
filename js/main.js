@@ -230,6 +230,60 @@ function deleteElementByWord(palabra) {
     }
 }
 
+const apiUrl = 'https://random-word-api.herokuapp.com/word?lang=es&number=10';
+
+changeWordToShow = () => {
+    fetch(apiUrl)
+        .then((response) => response.json())
+        .then((response) => console.log({ wordToShow: response }));
+};
+
+async function getRandomWords() {
+    try {
+        const response = await fetch(apiUrl);
+
+        if (response.ok) {
+            const words = await response.json();
+            return words;
+        } else {
+            throw new Error('Fallo el fetch');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+if (generateListButton)
+    generateListButton.addEventListener("click", async () => {
+        getRandomWords()
+            .then(words => {
+                currentWordList = [];
+                console.log(words);
+                words.forEach(w => {
+                    currentWordList.push(new InputWord(w, getLetterFromWord(w)));
+                });
+
+                user.wordList = currentWordList;
+                saveUserToLocalStorage(loggedUser, user);
+                mostrarLista(currentWordList);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    });
+
+function getLetterFromWord(inputString) {
+    let randomIdx;
+    let randomLetter;
+    do{
+        randomIdx = Math.floor(Math.random() * inputString.length);
+        randomLetter=inputString[randomIdx];
+    }while(randomLetter==" "); //Hago esto porq el api me trae palabras de a dos y a veces el random letter selecciona el espacio
+    
+    return randomLetter;
+}
+
+
 //Manejo del custom prompt. Lo deje porque es unp hecho a mano, no es el prompt default.
 if (inputWordButton)
     inputWordButton.addEventListener("click", async () => {
@@ -284,10 +338,6 @@ if (inputWordButton)
             inputCorrect = true;
 
             currentWordList.push(new InputWord(promptValues[0], promptValues[1]));
-            /*             if (currentWordList.length >= 5) {
-                            startCountButton.style.display = 'block';
-                            orderWordsButton.style.display = 'block'
-                        } */
             user.wordList = currentWordList;
             saveUserToLocalStorage(loggedUser, user);
             console.log("--> Lista de palabras: ");
@@ -348,6 +398,7 @@ if (cancelButton)
 //Proceso respuestas que envia el usuario (Game Engine)
 if (submitAnswer)
     submitAnswer.addEventListener('click', async () => {
+        scoreh3.textContent="";
         answerInput.focus();
         let userAnswer = answerInput.value;
 
@@ -361,12 +412,17 @@ if (submitAnswer)
             console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + currentWordList[idx].contarLetra());
             //TODO chequear que efectivamente ingreso un numero
             let numAnswer = parseInt(userAnswer);
-            currentWordList[idx].computarPuntaje(numAnswer);
-            console.log("Consiguio: " + currentWordList[idx].puntajeObtenido_letras + " de " + currentWordList[idx].puntaje);
-            if (++idx < currentWordList.length)
-                instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?";
-            else
-                calcularYmostrarResultado(gameInCurse, "puntajeObtenido_letras");
+            if (numAnswer && !isNaN(numAnswer)) {
+                currentWordList[idx].computarPuntaje(numAnswer);
+                console.log("Consiguio: " + currentWordList[idx].puntajeObtenido_letras + " de " + currentWordList[idx].puntaje);
+                if (++idx < currentWordList.length)
+                    instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?";
+                else
+                    calcularYmostrarResultado(gameInCurse, "puntajeObtenido_letras");
+            }
+            else{
+                scoreh3.textContent="No se ingresó un número. Solo se admiten números."
+            }
 
         }
         else if (gameInCurse = 'Orden de Palabras') {
@@ -438,7 +494,6 @@ function calcularYmostrarResultado(nombreJuego, campo) {
 
     submitAnswer.style.display = 'none'
     answerInput.style.display = 'none';
-    //commonSetupsAfterGame();
 }
 
 function borrarPuntaje() {
