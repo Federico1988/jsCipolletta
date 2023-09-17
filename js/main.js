@@ -7,7 +7,6 @@ const inputWordButton = document.getElementById("inputWordButton"),
     registerButton = document.getElementById('registerButton'),
     mailInput = document.querySelector("#emailInput"),
     passwordInput = document.querySelector("#passwordInput"),
-    //nameInput = document.querySelector("#nameInput"),
     loginMsgLabel = document.querySelector("#loginMsgLabel"),
     userNameLabel = document.querySelector("#userNameLabel"),
     scoresText = document.querySelector("#scoresText"),
@@ -18,7 +17,8 @@ const inputWordButton = document.getElementById("inputWordButton"),
     answerInput = document.querySelector("#answerInput"),
     cancelButton = document.querySelector("#cancelButton"),
     answersDiv = document.querySelector("#answerDiv"),
-    scoreh3 = document.querySelector("#scoreh3");
+    scoreh3 = document.querySelector("#scoreh3"),
+    generateListButton = document.querySelector("#generateListButton")
 
 const vocales = ["a", "e", "i", "o", "u"];
 const USER_NOT_FOUND = 0, WRONG_PASSWORD = 1, LOGIN_OK = 2;
@@ -100,13 +100,6 @@ class InputWord {
 
 let currentWordList = [];
 
-//Lleno la lista para la parte de testing (asi no tengo que ingresar todas a mano), en realidad el usuario ingresa todas. Las dejo comentadas para prox test
-/*currentWordList.push(new InputWord("Hola", "L"));
-currentWordList.push(new InputWord("Chau", "L"));
-currentWordList.push(new InputWord("Mesa", "M"));
-currentWordList.push(new InputWord("Milanesa", "N"));
-currentWordList.push(new InputWord("Acondicionado", "N"));*/
-
 
 //esto pasa en indx.html
 if (registerButton)
@@ -123,7 +116,6 @@ if (registerButton)
                 loginMsgLabel.classList.add('redLabel');
             }
             else {
-                //localStorage.setItem(mailInput.value, JSON.stringify(new User(passwordInput.value, [], 0)));
                 saveUserToLocalStorage(mailInput.value, new User(passwordInput.value, [], 0))
                 mailInput.vale = "";
                 passwordInput.value = "";
@@ -137,8 +129,6 @@ if (registerButton)
             loginMsgLabel.className = '';
             loginMsgLabel.classList.add('redLabel');
         }
-        /*         inputWordButton.style.display = 'none';
-                startCountButton.style.display = 'none'; */
     });
 
 //esto pasa en indx.html
@@ -475,13 +465,14 @@ function deserializeInputWord(obj) {
 }
 
 function hideWordList() {
+    generateListButton.style.display = 'none';
     ulWords.style.display = 'none';
-    inputWordButton.style.display = 'none'
+    inputWordButton.style.display = 'none';
 }
 function showWordList() {
-
     ulWords.style.display = 'block';
-    inputWordButton.style.display = 'block'
+    inputWordButton.style.display = 'block';
+    generateListButton.style.display = 'block';
 }
 
 //Serializo y guardo

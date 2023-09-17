@@ -14,11 +14,12 @@ h1 {
     font-weight: bold;
 }
 
-h2{
+h2 {
     margin-bottom: 20px;
     font-size: xx-large;
     font-style: italic;
 }
+
 .redLabel {
     color: red;
     font-weight: bold;
@@ -100,7 +101,6 @@ form {
         border-radius: 0;
         box-shadow: none;
         border-bottom: 2px solid #007bff;
-        /* Change the color if desired */
     }
 
     .form-control:focus {
@@ -108,7 +108,6 @@ form {
         border-radius: 0;
         box-shadow: none;
         border-bottom: 2px solid #0ea00e;
-        /* Change the color if desired */
 
     }
 
@@ -121,9 +120,10 @@ form {
     justify-content: center;
 }
 
-.hidden{
+.hidden {
     display: none;
 }
+
 .buttonClass {
     padding: 15px;
     font-size: larger;
@@ -175,29 +175,32 @@ form {
     padding: 5px;
     font-size: larger;
 }
-.buttonsDiv{
-}
+
 .roundedButton {
     padding: 5px;
     border-radius: 5px;
 }
+
 .roundedBigButton {
     padding: 15px;
     border-radius: 5px;
 }
-.addLetter{
+
+.addLetter {
     justify-content: space-between;
 }
 
-.gameDiv{
+.gameDiv {
     display: inline-flex;
 }
-#answerDiv{
+
+#answerDiv {
     padding: 30px;
     border: 2px solid #ccc;
     border-radius: 5px;
 }
-.gameInput{
+
+.gameInput {
     padding: 60px;
     justify-content: space-around;
 }
@@ -215,8 +218,19 @@ form {
         transform: scale(1);
         opacity: 1;
     }
+
     100% {
         transform: scale(10);
         opacity: 0;
+    }
+}
+
+#wordsDiv {
+    .input-group.addLetter input[type="button"] {
+        margin-top: 10px;
+    }
+
+    #ulWords {
+        margin-top: 10px;
     }
 }
