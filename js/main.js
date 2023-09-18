@@ -421,6 +421,10 @@ if (submitAnswer)
             if (numAnswer && !isNaN(numAnswer)) {
                 currentWordList[idx].computarPuntaje(numAnswer);
                 console.log("Consiguio: " + currentWordList[idx].puntajeObtenido_letras + " de " + currentWordList[idx].puntaje);
+                Toastify({
+                    text: "Consiguió: " + currentWordList[idx].puntajeObtenido_letras + " de " + currentWordList[idx].puntaje + " puntos!",
+                    duration: 3000
+                    }).showToast();
                 if (++idx < currentWordList.length)
                     instruction.textContent = "Cuantas veces aparecía la letra solicitada en la " + (idx + 1) + "° palabra ingresada?";
                 else
