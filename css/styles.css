@@ -164,22 +164,29 @@ form .form-control:focus {
   align-items: center;
 }
 
-.ulElement {
-  display: flex;
-  justify-content: space-between;
-  list-style: none;
-  padding: 0;
-}
-
-.ulColumn {
-  flex: 1;
-  padding: 5px;
-  font-size: larger;
-}
-
 .roundedButton {
   padding: 5px;
   border-radius: 5px;
+}
+
+.ulElement {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  align-content: center;
+  margin: 2px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.ulRow1 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ulColumn {
+  padding: 5px;
+  font-size: larger;
 }
 
 .roundedBigButton {

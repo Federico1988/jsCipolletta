@@ -196,10 +196,16 @@ function mostrarLista(arr) {
     if (arr.length)
         for (const el of arr) {
             wordElement = `
-            <li class="ulElement">
-              <div class="ulColumn">${el.word}</div>
-              <div class="ulColumn">Letra: ${el.letra}</div>
-              <div class="ulColumn"><button class="roundedButton removeButton">Quitar</button></div>
+            
+             <li class="ulElement">
+                <div class="ulRow1">
+                    <div class="ulColumn">${el.word}</div>
+                    <div class="ulColumn">Letra: ${el.letra}</div>
+                    <div class="ulColumn"><button class="roundedButton removeButton">Quitar</button></div>
+                </div>
+                <div>
+                    <div class="ulColumn">Puntaje: ${el.puntaje}</div>
+                </div>
             </li>
           `;            //se la agrego al contenedor
             ulWords.innerHTML += wordElement;
@@ -275,11 +281,11 @@ if (generateListButton)
 function getLetterFromWord(inputString) {
     let randomIdx;
     let randomLetter;
-    do{
+    do {
         randomIdx = Math.floor(Math.random() * inputString.length);
-        randomLetter=inputString[randomIdx];
-    }while(randomLetter==" "); //Hago esto porq el api me trae palabras de a dos y a veces el random letter selecciona el espacio
-    
+        randomLetter = inputString[randomIdx];
+    } while (randomLetter == " "); //Hago esto porq el api me trae palabras de a dos y a veces el random letter selecciona el espacio
+
     return randomLetter;
 }
 
@@ -398,7 +404,7 @@ if (cancelButton)
 //Proceso respuestas que envia el usuario (Game Engine)
 if (submitAnswer)
     submitAnswer.addEventListener('click', async () => {
-        scoreh3.textContent="";
+        scoreh3.textContent = "";
         answerInput.focus();
         let userAnswer = answerInput.value;
 
@@ -420,8 +426,8 @@ if (submitAnswer)
                 else
                     calcularYmostrarResultado(gameInCurse, "puntajeObtenido_letras");
             }
-            else{
-                scoreh3.textContent="No se ingresó un número. Solo se admiten números."
+            else {
+                scoreh3.textContent = "No se ingresó un número. Solo se admiten números."
             }
 
         }
