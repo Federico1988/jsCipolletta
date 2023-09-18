@@ -458,9 +458,17 @@ if (submitAnswer)
                 }
 
                 console.log("Suma en este palabra: " + currentWordList[idx].puntajeObtenido_palabras);
+                Toastify({
+                    text: "Consiguió: " + currentWordList[idx].puntajeObtenido_palabras + " de " + currentWordList[idx].puntaje + " puntos!",
+                    duration: 3000
+                    }).showToast();
 
             } else {
                 console.log("No se encuentra el elemento, resta el puntaje de la palabra correcta");
+                Toastify({
+                    text: "No se encuentra el elemento, resta el puntaje de la palabra correcta: -" + currentWordList[idx].puntaje,
+                    duration: 3000
+                    }).showToast();
                 currentWordList[idx].puntajeObtenido_palabras -= currentWordList[idx].puntaje;
                 //continue; // sigo con la proxima palabra
             }
