@@ -29,7 +29,7 @@ class User {
         this.maxScore = maxScore;
     }
     serialize() {
-        // Convert a User instance to a plain object
+        // Convertir objeto a texto plano
         return {
             password: this.password,
             maxScore: this.maxScore,
@@ -107,7 +107,6 @@ if (registerButton)
         loginMsgLabel.textContent = '';
 
         if (customForm.checkValidity()) {
-            //const user = JSON.parse(localStorage.getItem(mailInput.value));
             const user = getUserFromLocalStorage(mailInput.value)
             if (user != null) {
 
@@ -175,7 +174,6 @@ if (userNameLabel) {
     loggedUser = sessionStorage.getItem("loggedUser");
     if (loggedUser) {
         userNameLabel.textContent = "Usuario: " + loggedUser;
-        //console.log("Usuario: " + loggedUser);
         user = getUserFromLocalStorage(loggedUser);
         console.log(user);
         scoresText.textContent = "Puntaje maximo: " + user.maxScore;
@@ -416,7 +414,6 @@ if (submitAnswer)
 
         if (gameInCurse == 'Cuenta de Letras') {
             console.log("El usuario ingresó: " + userAnswer + " , y la respuesta correcta es: " + currentWordList[idx].contarLetra());
-            //TODO chequear que efectivamente ingreso un numero
             let numAnswer = parseInt(userAnswer);
             if (numAnswer && !isNaN(numAnswer)) {
                 currentWordList[idx].computarPuntaje(numAnswer);
@@ -470,7 +467,6 @@ if (submitAnswer)
                     duration: 3000
                     }).showToast();
                 currentWordList[idx].puntajeObtenido_palabras -= currentWordList[idx].puntaje;
-                //continue; // sigo con la proxima palabra
             }
 
             if (++idx < currentWordList.length)
